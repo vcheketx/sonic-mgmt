@@ -4,7 +4,7 @@ Helper functions for span tests
 
 import ptf.testutils as testutils
 
-def send_and_verify_mirrored_packet(ptfadapter, src_port, monitor):
+def send_and_verify_mirrored_packet(ptfadapter, src_port, dst_port, monitor):
     '''
     Send packet from ptf and verify it on monitor port
 
@@ -14,8 +14,9 @@ def send_and_verify_mirrored_packet(ptfadapter, src_port, monitor):
         monitor: ptf port index, where packet will be verified on
     '''
     src_mac = ptfadapter.dataplane.get_mac(0, src_port)
+    dst_mac = ptfadapter.dataplane.get_mac(0, dst_port)
 
-    pkt = testutils.simple_icmp_packet(eth_src=src_mac, eth_dst='ff:ff:ff:ff:ff:ff')
+    pkt = testutils.simple_icmp_packet(eth_src=src_mac, eth_dst=dst_mac)
 
     ptfadapter.dataplane.flush()
     testutils.send(ptfadapter, src_port, pkt)
